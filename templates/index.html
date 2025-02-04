@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subdomain Enumeration</title>
+</head>
+<body>
+    <h1>Subdomain Enumeration</h1>
+    <form id="enum-form" method="GET">  Domain: <input type="text" name="domain" value="{{ domain or '' }}"><br>  <button type="submit">Enumerate</button>
+    </form>
+    <div id="results">
+      {% if error %}  <p style="color: red;">{{ error }}</p>
+      {% endif %}
+      {% if results and results.subdomains %}
+        <ul>
+          {% for subdomain in results.subdomains %}
+            <li>{{ subdomain }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>  </body>
+</html>

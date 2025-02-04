@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subenum-deployment  # Name of your deployment
+spec:
+  replicas: 4  # Number of pod replicas (adjust as needed)
+  selector:
+    matchLabels:
+      app: subenum  # Label to match pods
+  template:
+    metadata:
+      labels:
+        app: subenum  # Label for the pods
+    spec:
+      containers:
+      - name: subenum-container  # Name of the container
+        image: anirudhb006/subenum3:latest  # Your image name
+        ports:
+        - containerPort: 5000  # Port your Flask app listens on
+        env:
+        - name: DEBUG_PRINT # Enable debug prints (Optional)
+          value: "true"

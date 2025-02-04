@@ -1,0 +1,14 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: subenum-service
+spec:
+  selector:
+    app: subenum
+  ports:
+  - protocol: TCP
+    port: 80  # The port you'll access from your local network
+    targetPort: 5000  # Your application's port
+    nodePort: 30001 # Choose a free port between 30001-32767
+  type: NodePort
