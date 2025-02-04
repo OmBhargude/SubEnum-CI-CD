@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/YOURUSERNAME/jenkins-kubernetes-deployment.git'
+        git 'https://github.com/OmBhargude/SubEnum-CI-CD.git'
       }
     }
     stage('Build image') {
@@ -29,7 +29,7 @@ pipeline {
         }
       }
     }
-    stage('Deploying React.js container to Kubernetes') {
+    stage('Deploying Flask container to Kubernetes') {
       steps {
         script {
           kubernetesDeploy(configs: "deployment.yaml", 
