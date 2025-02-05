@@ -1,12 +1,13 @@
-FROM docker.io/library/python:3.9-slim-buster
-WORKDIR /ap
+FROM python:3.9-slim-buster
+
+WORKDIR /app
 
 # Copy subfinder (assuming it's in the same directory as the Dockerfile)
-COPY subfinder /ap/  
+COPY subfinder /app/  
 # Copy the subfinder binary
 
 # Copy your web application code
-COPY . /ap/ 
+COPY . /app/ 
 # Copy the web app directory including app.py and templates
 
 # Install dependencies
