@@ -23,6 +23,7 @@ pipeline {
         }
         stage('Deploy to Kubernetes') {
             steps {
+        withKubeConfig(credentialsId: 'kubernetes-credentials'){
                         // Deployment doesn't exist, create it along with the service
                         sh "kubectl apply -f deployment.yaml"
                         sh "kubectl apply -f service.yaml"
@@ -30,3 +31,4 @@ pipeline {
                 }
             }
         }
+}
