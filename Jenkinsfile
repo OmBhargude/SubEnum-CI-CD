@@ -1,41 +1,35 @@
 pipeline {
-  environment {
-    dockerimagename = "om1201/subenum3"
-    dockerImage = ""
-  }
-  agent any
-  stages {
-    stage('Checkout Source') {
-      steps {
-        git 'https://github.com/OmBhargude/SubEnum-CI-CD.git'
-      }
+    agent any
+    environment {
+        DOCKER_IMAGE_NAME = "om1201/subenum3" // Replace with your Docker Hub username and image name
     }
-    stage('Build image') {
-      steps{
-        script {
-          dockerImage = docker.build dockerimagename
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/OmBhargude/SubEnum-CI-CD.git' // Or specify a branch like '*/main'
+            }
         }
-      }
-    }
-    stage('Pushing Image') {
-      environment {
-          registryCredential = 'dockerhub-credentials'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
-          }
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ."
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh "docker login -u ${USERNAME} -p ${PASSWORD}"
+                        sh "docker push ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}"
+                    }
+                }
+            }
         }
-      }
-    }
-    stage('Deploying Flask container to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "deployment.yaml", 
-                                         "service.yaml")
+        stage('Deploy to Kubernetes') {
+            steps {
+                withKubeConfig(credentialsId: 'kubernetes-credentials') {
+                        // Deployment doesn't exist, create it along with the service
+                        sh "kubectl apply -f deployment.yaml"
+                        sh "kubectl apply -f service.yaml"
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
