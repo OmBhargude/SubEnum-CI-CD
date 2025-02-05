@@ -1,5 +1,4 @@
-FROM python:3.9-slim-buster
-
+FROM docker.io/library/python:3.9-slim-buster
 WORKDIR /ap
 
 # Copy subfinder (assuming it's in the same directory as the Dockerfile)
