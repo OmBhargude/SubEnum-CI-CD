@@ -14,13 +14,6 @@ def debug_print(message):
         print(message)
 
 
-# --- Health Check Endpoint - ADDED ---
-@app.route('/health')
-def health_check():
-    return "OK", 200
-# --- End Health Check Endpoint ---
-
-
 @app.route("/", methods=["GET"])
 def index():
     results = None
