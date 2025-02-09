@@ -1,14 +1,22 @@
 from flask import Flask, request, render_template, jsonify
 import subprocess
 import re
+import os # Import the os module
 
 app = Flask(__name__)
 
-DEBUG_PRINT = True  # Set to False to disable debug prints
+DEBUG_PRINT = True   # Set to False to disable debug prints
+PORT = int(os.environ.get('PORT', 5000)) # Get PORT from environment variable, default to 5000
 
 def debug_print(message):
     if DEBUG_PRINT:
         print(message)
+
+# --- Health Check Endpoint - ADDED ---
+@app.route('/health')
+def health_check():
+    return "OK", 200
+# --- End Health Check Endpoint ---
 
 @app.route("/", methods=["GET"])
 def index():
@@ -53,44 +61,4 @@ def index():
                 elif best_type == 'text/html':
                     return render_template("index.html", error=error, domain=domain), 500
                 else:
-                    return render_template("index.html", error=error, domain=domain), 500
-
-    debug_print("Returning initial HTML")
-    return render_template("index.html", results=results, error=error, domain=domain)
-
-
-def run_subfinder_locally(domain):
-    try:
-        command = ["./subfinder", "-d", domain, "-silent"]  # Or adjust as needed
-        debug_print(f"Running command: {command}")
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
-        stdout = result.stdout.strip()
-        stderr = result.stderr.strip()
-
-        if stderr:
-            debug_print(f"Subprocess stderr: {stderr}")
-
-        ansi_escape = re.compile(r'\x1b\[[0-9;]*[mG]')
-        cleaned_stdout = ansi_escape.sub('', stdout)
-
-        subdomains = cleaned_stdout.splitlines()
-
-        # Remove the first line (AS number info) if it exists (usually not needed for subfinder)
-        # if subdomains and subdomains[0].startswith("AS"):  # Commented out, as subfinder usually doesn't have this
-        #     subdomains = subdomains[1:]
-
-        debug_print(f"Subdomains: {subdomains}")
-        return {"subdomains": subdomains}
-    except subprocess.CalledProcessError as e:
-        debug_print(f"CalledProcessError: {e}")
-        return {"error": str(e)}
-    except FileNotFoundError:
-        debug_print("FileNotFoundError: subfinder not found")
-        return {"error": "subfinder not found. Install it or provide the correct path."}
-    except Exception as e:  # Catch any other exceptions
-        debug_print(f"Exception in run_subfinder_locally: {e}")
-        return {"error": str(e)}
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')  # Important: Add host='0.0.0.0'
+                    return
