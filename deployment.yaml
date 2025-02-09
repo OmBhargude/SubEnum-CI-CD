@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: subenum-container  # Name of the container
-        image: anirudhb006/subenum3:latest  # Your image name
+        image: om1201/subenum:latest  # Your image name
         ports:
         - containerPort: 5000  # Port your Flask app listens on
         env:
