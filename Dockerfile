@@ -2,17 +2,18 @@ FROM python:3.9-slim-buster
 
 WORKDIR /app
 
-# Copy subfinder (assuming it's in the same directory as the Dockerfile)
-COPY subfinder /app/  
-# Copy the subfinder binary
+# Copy subfinder binary - corrected path and ensure executable
+COPY subfinder /app/subfinder
+RUN chmod +x /app/subfinder
 
 # Copy your web application code
-COPY . /app/ 
-# Copy the web app directory including app.py and templates
+COPY . /app/
+RUN chmod +x /app/script1.sh
 
+# No need to copy requirements.txt again, it's already in /app
 # Install dependencies
-COPY requirements.txt .
 RUN pip install -r requirements.txt
+
 
 # Set environment variables (if needed)
 ENV PORT 5000

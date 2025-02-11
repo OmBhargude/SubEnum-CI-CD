@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_NAME = "om1201/subenum" // Replace with your Docker Hub username and image name
+        DOCKER_IMAGE_NAME = "om1201/myapp" // Replace with your Docker Hub username and image name
     }
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/OmBhargude/SubEnum-CI-CD.git' // Or specify a branch like '*/main'
+                git branch: 'main', url: 'https://github.com/OmBhargude/Ditiss-AUG24.git' // Or specify a branch like '*/main'
             }
         }
         stage('Build and Push Docker Image') {
